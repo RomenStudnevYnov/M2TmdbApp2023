@@ -68,6 +68,13 @@ class PersonPopularAdapter(private val persons: ArrayList<Person>,
         // set social bar fragment container view tag with unique person id
         holder.binding.socialBarFcv.tag = curItem.id.toString()
 
+        holder.binding.genderIv.setImageResource(when (curItem.gender) {
+            1 -> R.drawable.ic_gender_female
+            2 -> R.drawable.ic_gender_male
+            3 -> R.drawable.ic_gender_trans
+            else -> android.R.color.transparent
+        })
+
        /* demo only : no the best place to set the listener
        holder.binding.itemViewCl.setOnClickListener {
             val intent = Intent()

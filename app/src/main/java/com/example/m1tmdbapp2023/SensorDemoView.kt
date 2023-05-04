@@ -26,6 +26,7 @@ class SensorDemoView @JvmOverloads constructor(
     // hold XML custom attributes
     private var dialCaption: String? = null
     private var dialColor = Color.BLUE // default color
+    private var dialMaxrange: String? = null
     private val dialNeedleColors: Array<String> = context.resources.getStringArray(R.array.dial_needle_colors)
 
     // Paint styles used for rendering are initialized here to improve performance,
@@ -49,7 +50,10 @@ class SensorDemoView @JvmOverloads constructor(
         // Load attributes
         val a: TypedArray = context.obtainStyledAttributes(attrs, R.styleable.SensorDemoView, defStyleAttr, 0)
         dialCaption = a.getString(R.styleable.SensorDemoView_dialCaption)
-        if (dialCaption == null) dialCaption = if (isInEditMode) context.getString(R.string.sensor_unknown) else ""
+            ?: if (isInEditMode) context.getString(R.string.sensor_unknown) else ""
+        dialMaxrange = a.getString(R.styleable.SensorDemoView_dialMaxrange)
+            ?: if (isInEditMode) context.getString(R.string.maxrange_unknown) else ""
+
         dialColor = a.getColor(R.styleable.SensorDemoView_dialColor, dialColor)
         a.recycle()
     }
@@ -99,9 +103,9 @@ class SensorDemoView @JvmOverloads constructor(
 
         // draw the dial needles
         sensorEvent?.let {
-            for (i in 0..min(it.values.size, dialNeedleColors.size) -1) {
+            for (i in 0 until min(it.values.size, dialNeedleColors.size)) {
                 paint.color = dialNeedleColors[i].toInt()
-                val angle = ((it.values[i] * 2 * Math.PI) / it.sensor.getMaximumRange())
+                val angle = ((it.values[i] * 2 * Math.PI) / it.sensor.maximumRange)
                 canvas.drawLine(
                     cx,
                     cy,
@@ -109,7 +113,6 @@ class SensorDemoView @JvmOverloads constructor(
                     cy - radius * cos(angle).toFloat(),
                     paint
                 )
-
             }
         }
 
@@ -122,6 +125,16 @@ class SensorDemoView @JvmOverloads constructor(
             captionHeight,
             paint
         )
+
+        // draw sensor max range
+        this.dialMaxrange?.let {
+            canvas.drawText(
+                it,
+                cx,
+                cy + radius * 0.5f - captionHeight * 0.5f,
+                paint
+            )
+        }
     }
 
     fun setCaption(caption: String) {
@@ -134,5 +147,9 @@ class SensorDemoView @JvmOverloads constructor(
         invalidate()
     }
 
+    fun setSensorMaxRange(range: String?) {
+        dialMaxrange = range
+        invalidate()
+    }
 
 }

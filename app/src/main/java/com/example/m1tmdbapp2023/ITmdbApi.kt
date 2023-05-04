@@ -1,7 +1,9 @@
 package com.example.m1tmdbapp2023
 
+import com.example.m1tmdbapp2023.model.PersonDetails
 import retrofit2.Call
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 
@@ -17,4 +19,10 @@ interface ITmdbApi {
         @Query("api_key") apiKey: String,
         @Query("page") pageNb: Int
     ): Call<PersonPopularResponse>
+
+    @GET("person/{id}")
+    fun getPersonDetails(
+        @Path("id") id: Int,
+        @Query("api_key") apiKey: String,
+    ): Call<PersonDetails>
 }

@@ -51,6 +51,7 @@ class SensorDemoActivity : AppCompatActivity(), SensorEventListener, OnSensorIte
         registerSensorListener()
         binding.sensorDemoView.setCaption(currentSensor!!.name)
         binding.sensorDemoView.setSensorEvent(null)
+        binding.sensorDemoView.setSensorMaxRange(getString(R.string.maxrange_unknown))
     }
 
     override fun onSensorChanged(event: SensorEvent?) {
@@ -63,6 +64,7 @@ class SensorDemoActivity : AppCompatActivity(), SensorEventListener, OnSensorIte
                     .append(if (n - i == 1) '.' else ", ")
             }
             binding.sensorDemoView.setSensorEvent(event)
+            binding.sensorDemoView.setSensorMaxRange(event.sensor.maximumRange.toString())
             binding.arrayValuesTv.text = values.toString()
         }
     }
